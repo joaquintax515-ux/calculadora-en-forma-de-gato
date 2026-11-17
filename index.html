@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Calculadora Gatito</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg1:#6f4de0;--bg2:#b98cf5;--bg3:#5a36c4;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0}
+body{background:radial-gradient(circle at 12% 10%,rgba(255,130,200,.6),transparent 38%),radial-gradient(circle at 90% 18%,rgba(80,225,255,.5),transparent 40%),radial-gradient(circle at 86% 92%,rgba(255,170,90,.4),transparent 38%),radial-gradient(circle at 8% 88%,rgba(150,90,255,.65),transparent 42%),radial-gradient(ellipse at 50% 42%,#c79bff 0,#8e63ea 42%,#5a36c4 80%,#3b1f8f 100%);display:flex;align-items:center;justify-content:center;overflow:hidden;font-family:'Fredoka','Nunito','Trebuchet MS',sans-serif}
+#bg{position:fixed;inset:0;overflow:hidden;pointer-events:none}
+#bg::before{content:"";position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.2) 1.6px,transparent 2.2px);background-size:26px 26px;-webkit-mask-image:radial-gradient(ellipse at center,transparent 22%,#000 85%);mask-image:radial-gradient(ellipse at center,transparent 22%,#000 85%)}
+#bg .f{position:absolute;opacity:.55;filter:drop-shadow(0 0 6px rgba(255,255,255,.55))}
+@media (prefers-reduced-motion:no-preference){#bg .f{animation:floaty var(--d,14s) linear var(--w,0s) infinite;opacity:0}}
+@keyframes floaty{0%{transform:translateY(8vh) rotate(-10deg) scale(.8);opacity:0}15%{opacity:.8}50%{transform:translateY(-8vh) rotate(10deg) scale(1)}85%{opacity:.8}100%{transform:translateY(-24vh) rotate(-10deg) scale(.9);opacity:0}}
+.cat{position:relative;z-index:1;aspect-ratio:470/835;width:min(94vw,calc((100dvh - 16px) * 470 / 835));container-type:inline-size;user-select:none}
+.cat svg.layer{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.screen{position:absolute;left:15.3%;top:38.6%;width:69.4%;height:11.5%;border-radius:3.2cqw;background:linear-gradient(160deg,#86f4f0,#4fdcdc 55%,#35c4cc);box-shadow:inset 0 0 0 .7cqw #1a5560,inset 0 -1cqw 2cqw rgba(0,90,110,.35),0 .6cqw 0 #0a0a0c;overflow:hidden}
+.screen::before{content:"";position:absolute;left:2%;top:4%;width:42%;height:34%;border-radius:50%;background:rgba(255,255,255,.5);filter:blur(.5cqw)}
+.screen svg{position:absolute;inset:0;width:100%;height:100%}
+.pad{position:absolute;left:11.5%;top:52.4%;width:78.5%;height:36.2%;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:repeat(4,1fr);gap:1.9cqw 1.8cqw}
+.k{position:relative;border:0;padding:0;cursor:pointer;color:#fff;font:700 9.6cqw/1 'Fredoka','Nunito',sans-serif;text-shadow:0 .5cqw 0 rgba(30,0,80,.45);border-radius:5cqw;background:linear-gradient(#a066f7,#6c30d2 55%,#5424b2);box-shadow:inset 0 .7cqw 0 rgba(255,255,255,.4),inset 0 -1.1cqw 0 rgba(35,8,95,.5),0 0 0 .8cqw #2b0f5f,0 1.3cqw 0 .8cqw #1b0841;transition:transform .06s,filter .06s}
+.k::before{content:"";position:absolute;left:12%;top:8%;width:30%;height:14%;border-radius:50%;background:rgba(255,255,255,.4)}
+.k:active,.k.on{transform:translateY(1cqw);filter:brightness(1.12)}
+.k.o{background:linear-gradient(#ffbd4a,#fb8f0a 55%,#ee7500);box-shadow:inset 0 .7cqw 0 rgba(255,255,255,.5),inset 0 -1.1cqw 0 rgba(150,60,0,.45),0 0 0 .8cqw #3a1650,0 1.3cqw 0 .8cqw #24093a}
+.k.y{background:linear-gradient(#fff06a,#ffd21e 55%,#f5b300);box-shadow:inset 0 .7cqw 0 rgba(255,255,255,.6),inset 0 -1.1cqw 0 rgba(160,100,0,.45),0 0 0 .8cqw #3a1650,0 1.3cqw 0 .8cqw #24093a}
+.k svg{width:44%;height:44%;margin:auto;display:block;filter:drop-shadow(0 .5cqw 0 rgba(90,30,0,.45))}
+.bow{position:absolute;left:41%;top:35%;width:18%;height:5.6%;border:0;background:none;cursor:pointer;border-radius:50%;transition:transform .15s}
+.bow:active{transform:scale(.9) rotate(-6deg)}
+.pill{position:absolute;top:92.3%;height:5%;width:24.5%;border:0;padding:0;cursor:pointer;border-radius:4cqw;color:#fff;font:700 6.4cqw/1 'Fredoka','Nunito',sans-serif;display:flex;align-items:center;justify-content:center;text-shadow:0 .4cqw 0 rgba(60,0,60,.4);box-shadow:inset 0 .6cqw 0 rgba(255,255,255,.5),inset 0 -.9cqw 0 rgba(0,0,0,.25),0 0 0 .7cqw #2b0f5f,0 1.1cqw 0 .7cqw #1b0841;transition:transform .06s}
+.pill:active{transform:translateY(.8cqw)}
+.pill svg{width:42%;height:70%}
+#ac{left:18.1%;background:linear-gradient(#ff9ec9,#f0529a)}
+#del{left:57.4%;background:linear-gradient(#7ef0ee,#25b9c4)}
+.pill:focus-visible,.k:focus-visible,.bow:focus-visible{outline:.7cqw solid #fff;outline-offset:.6cqw}
+@media (prefers-reduced-motion:reduce){.k,.bow{transition:none}}
+</style>
+</head>
+<body>
+<div id="bg" aria-hidden="true"></div>
+<main class="cat" aria-label="Calculadora gatito">
+s
+<svg class="layer" viewBox="0 0 470 835" aria-hidden="true">
+<defs>
+ <symbol id="paw" viewBox="0 0 40 40"><ellipse cx="20" cy="27" rx="11" ry="9"/><circle cx="6.5" cy="17" r="5"/><circle cx="15.5" cy="9" r="5.5"/><circle cx="26" cy="9" r="5.5"/><circle cx="34.5" cy="17" r="5"/></symbol>
+ <symbol id="spark" viewBox="-12 -12 24 24"><path d="M0-11Q1.5-1.5 11 0Q1.5 1.5 0 11Q-1.5 1.5-11 0Q-1.5-1.5 0-11Z"/></symbol>
+ <symbol id="star" viewBox="-12 -12 24 24"><path d="M0-11l3.2 6.6 7.3 1-5.3 5.1 1.3 7.2L0 17l-6.5 3.4 1.3-7.2L-10.5-3.4l7.3-1z" transform="scale(.8) translate(0 -3)"/></symbol>
+ <symbol id="heart" viewBox="-16 -14 32 28"><path d="M0 11C-18-1-11-14 0-6 11-14 18-1 0 11Z"/></symbol>
+ <linearGradient id="bodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2c31"/><stop offset=".5" stop-color="#17171a"/><stop offset="1" stop-color="#0c0c0e"/></linearGradient>
+ <linearGradient id="platG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a27cf2"/><stop offset="1" stop-color="#6b3fc8"/></linearGradient>
+ <radialGradient id="domeG" cx=".5" cy=".6" r=".6"><stop offset="0" stop-color="#fff" stop-opacity=".35"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></radialGradient>
+ <clipPath id="eyeL"><circle cx="142" cy="228" r="35"/></clipPath>
+ <clipPath id="eyeR"><circle cx="332" cy="228" r="35"/></clipPath>
+</defs>
+
+<!-- cúpula -->
+<path d="M4 810V300C4 130 108 38 235 38s231 92 231 262v510Z" fill="url(#domeG)"/>
+<path d="M20 790V300C20 145 118 56 235 56s215 89 215 244" fill="none" stroke="#fff" stroke-opacity=".6" stroke-width="1.6" stroke-dasharray="9 7"/>
+
+<!-- decoración -->
+<g fill="#cdb6ff" opacity=".85"><use href="#paw" x="28" y="24" width="62" height="62"/><use href="#paw" x="427" y="108" width="40" height="40"/></g>
+<g fill="#4b2aa0" opacity=".9"><use href="#paw" x="194" y="62" width="58" height="58"/></g>
+<g fill="#b79df5" opacity=".6"><use href="#paw" x="-6" y="468" width="44" height="44"/><use href="#paw" x="446" y="490" width="40" height="40"/></g>
+<g fill="#ffe27a"><use href="#spark" x="118" y="10" width="30" height="30"/><use href="#spark" x="324" y="8" width="34" height="34"/><use href="#spark" x="4" y="92" width="26" height="26"/><use href="#spark" x="432" y="60" width="28" height="28"/><use href="#spark" x="436" y="52" width="0" height="0"/></g>
+<g fill="#ffe27a" stroke="#f0b829" stroke-width="1.5"><use href="#star" x="270" y="58" width="38" height="38"/><use href="#star" x="-2" y="410" width="30" height="30"/><use href="#star" x="432" y="418" width="30" height="30"/></g>
+<g fill="#ff8fc4" stroke="#ffc8e4" stroke-width="1.5"><use href="#heart" x="376" y="14" width="64" height="56"/><use href="#heart" x="6" y="196" width="46" height="40"/><use href="#heart" x="424" y="204" width="46" height="40"/></g>
+
+<!-- plataforma -->
+<rect x="10" y="756" width="450" height="72" rx="30" fill="#3f1f93"/>
+<rect x="10" y="750" width="450" height="70" rx="30" fill="url(#platG)" stroke="#bda3ff" stroke-width="2"/>
+<use href="#paw" x="215" y="777" width="46" height="46" fill="#ff8fc4" stroke="#ffc8e4" stroke-width="1"/>
+
+<!-- orejas -->
+<g id="ear">
+ <path d="M52 270C34 170 44 105 78 82c20-10 44 0 70 22l46 40-100 120Z" fill="#101012" stroke="#050506" stroke-width="7" stroke-linejoin="round"/>
+ <path d="M52 270C34 170 44 105 78 82c20-10 44 0 70 22l46 40-100 120Z" fill="none" stroke="#3b3b42" stroke-width="2.5" transform="translate(1 1)"/>
+ <path d="M72 195C66 140 72 110 88 100c16-6 36 8 60 30l30 26-62 50Z" fill="#ff9cc9"/>
+ <path d="M84 130c8-18 26-22 44-8" fill="none" stroke="#ffd2e8" stroke-width="5" stroke-linecap="round"/>
+</g>
+<use href="#ear" transform="translate(470 0) scale(-1 1)"/>
+
+<!-- cuerpo -->
+<path d="M235 128C340 128 446 168 450 300c3 52-20 70-20 118l10 322c0 24-14 32-40 32H80c-26 0-40-8-40-32l10-322c0-48-23-66-20-118C34 168 130 128 235 128Z" fill="#040405" transform="translate(0 4)"/>
+<path d="M235 128C340 128 446 168 450 300c3 52-20 70-20 118l10 322c0 24-14 32-40 32H80c-26 0-40-8-40-32l10-322c0-48-23-66-20-118C34 168 130 128 235 128Z" fill="url(#bodyG)" stroke="#43434b" stroke-width="3"/>
+<path d="M80 188C110 150 170 138 235 138" fill="none" stroke="#5a5a64" stroke-width="3" stroke-linecap="round" opacity=".7"/>
+<g fill="#232327"><use href="#paw" x="22" y="332" width="40" height="40"/><use href="#paw" x="408" y="332" width="40" height="40"/></g>
+
+<!-- cara -->
+<g fill="none" stroke="#3d3d44" stroke-width="3" stroke-linecap="round"><path d="M112 170q22-10 44-2"/><path d="M314 168q22-8 44 2"/></g>
+<g id="eyeLg">
+ <circle cx="142" cy="228" r="40" fill="#fff"/><circle cx="142" cy="228" r="37" fill="#08080b"/>
+ <g clip-path="url(#eyeL)"><ellipse cx="142" cy="250" rx="34" ry="22" fill="#2b7be0"/><ellipse cx="142" cy="256" rx="26" ry="14" fill="#6fb8ff"/></g>
+ <circle cx="140" cy="212" r="14" fill="#fff"/><circle cx="168" cy="236" r="5.5" fill="#fff"/>
+</g>
+<g>
+ <circle cx="332" cy="228" r="40" fill="#fff"/><circle cx="332" cy="228" r="37" fill="#08080b"/>
+ <g clip-path="url(#eyeR)"><ellipse cx="332" cy="250" rx="34" ry="22" fill="#2b7be0"/><ellipse cx="332" cy="256" rx="26" ry="14" fill="#6fb8ff"/></g>
+ <circle cx="320" cy="212" r="14" fill="#fff"/><circle cx="346" cy="236" r="5.5" fill="#fff"/>
+</g>
+<ellipse cx="237" cy="243" rx="16" ry="11" fill="#ff8fc4"/><ellipse cx="233" cy="239" rx="6" ry="3" fill="#ffd0e6"/>
+<path d="M202 254q10 20 35 8 25 12 35-8" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M237 253v9" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+<g stroke="#fff" stroke-width="5.5" stroke-linecap="round" fill="none">
+ <path d="M47 252q28-4 48 2"/><path d="M42 276q30 2 50 10"/><path d="M50 300q22 6 40 22"/>
+ <path d="M423 252q-28-4-48 2"/><path d="M428 276q-30 2-50 10"/><path d="M420 300q-22 6-40 22"/>
+</g>
+
+<!-- marco de la pantalla -->
+<rect x="58" y="304" width="354" height="128" rx="24" fill="#0a0a0c"/>
+<rect x="62" y="306" width="346" height="122" rx="22" fill="none" stroke="#4a4a52" stroke-width="2.5"/>
+</svg>
+
+<div class="screen" role="status" aria-live="polite"><svg id="lcd" viewBox="0 0 296 56" preserveAspectRatio="xMidYMid meet"></svg></div>
+<div class="pad" id="pad"></div>
+
+<svg class="layer" viewBox="0 0 470 835" aria-hidden="true">
+ <!-- patitas -->
+ <circle cx="34" cy="750" r="38" fill="#0a0a0c" stroke="#43434b" stroke-width="3"/>
+ <circle cx="436" cy="750" r="38" fill="#0a0a0c" stroke="#43434b" stroke-width="3"/>
+ <g fill="#ff8fc4"><use href="#paw" x="16" y="732" width="36" height="36"/><use href="#paw" x="418" y="732" width="36" height="36"/></g>
+ <!-- moño -->
+ <g transform="translate(239 316)" stroke="#d98200" stroke-width="2.5" stroke-linejoin="round">
+  <path d="M0 0C-12-22-46-20-46 2S-12 22 0 0Z" fill="#ffc83a"/><path d="M0 0C12-22 46-20 46 2S12 22 0 0Z" fill="#ffc83a"/>
+  <path d="M-12-6C-22-10-32-6-34 2" fill="none" stroke="#ffe48a"/><path d="M12-6C22-10 32-6 34 2" fill="none" stroke="#ffe48a"/>
+  <circle r="11" fill="#ffb21e"/><circle cx="-3" cy="-4" r="3.6" fill="#fff0a6" stroke="none"/>
+ </g>
+</svg>
+<button class="bow" id="clr" aria-label="Borrar todo" title="Borrar todo (C / Esc)"></button>
+<button class="pill" id="ac" aria-label="Borrar todo" title="Borrar todo (C / Esc)">C</button>
+<button class="pill" id="del" aria-label="Borrar último número" title="Borrar número (Retroceso)"><svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 9h20a3 3 0 0 1 3 3v16a3 3 0 0 1-3 3H13L4 20z"/><path d="M19 15l8 10M27 15l-8 10"/></svg></button>
+</main>
+
+<script>
+(function(){
+  // ---------- teclas ----------
+  var ICON={'/':'<path d="M9 20h22"/><circle cx="20" cy="9" r="3" fill="#fff" stroke="none"/><circle cx="20" cy="31" r="3" fill="#fff" stroke="none"/>',
+    '*':'<path d="M10 10l20 20M30 10L10 30"/>','-':'<path d="M8 20h24"/>','+':'<path d="M8 20h24M20 8v24"/>','=':'<path d="M9 14h22M9 26h22"/>'};
+  var LAYOUT=[['7','8','9','/'],['4','5','6','*'],['1','2','3','-'],['0','.','=','+']];
+  var pad=document.getElementById('pad'),btn={};
+  LAYOUT.forEach(function(row){row.forEach(function(k){
+    var b=document.createElement('button');b.className='k'+('/*-+'.indexOf(k)>-1?' o':'')+(k==='='?' y':'');
+    b.setAttribute('aria-label',{'/':'dividir','*':'multiplicar','-':'restar','+':'sumar','=':'igual','.':'punto'}[k]||k);
+    if(ICON[k]){b.innerHTML='<svg viewBox="0 0 40 40" fill="none" stroke="#fff" stroke-width="6.5" stroke-linecap="round">'+ICON[k]+'</svg>'}
+    else if(k==='.'){b.innerHTML='<svg viewBox="0 0 40 40"><circle cx="20" cy="20" r="5.5" fill="#fff"/></svg>'}
+    else b.textContent=k;
+    b.onclick=function(){press(k)};pad.appendChild(b);btn[k]=b;
+  })});
+
+  // ---------- pantalla de 7 segmentos ----------
+  var SEG={'0':'abcdef','1':'bc','2':'abdeg','3':'abcdg','4':'bcfg','5':'acdfg','6':'acdefg','7':'abc','8':'abcdefg','9':'abcdfg','-':'g','E':'adefg'};
+  var L={a:[5,4,21,4],b:[24,6,24,24],c:[24,28,24,46],d:[5,48,21,48],e:[3,28,3,46],f:[3,6,3,24],g:[4,26,22,26]};
+  var EX={'+':[[4,26,22,26],[13,15,13,37]],'=':[[4,18,22,18],[4,34,22,34]],'×':[[6,15,20,37],[20,15,6,37]],'÷':[[4,26,22,26]]};
+  function ln(a){return '<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+a[2]+'" y2="'+a[3]+'"/>'}
+  function glyph(c){
+    var s='';
+    if(c==='.')return {w:14,s:'<circle cx="6" cy="47" r="3.2" fill="#0d0d10" stroke="none"/>'};
+    if(SEG[c])SEG[c].split('').forEach(function(k){s+=ln(L[k])});
+    else if(EX[c]){EX[c].forEach(function(a){s+=ln(a)});if(c==='÷')s+='<circle cx="13" cy="15" r="2.8" fill="#0d0d10" stroke="none"/><circle cx="13" cy="37" r="2.8" fill="#0d0d10" stroke="none"/>'}
+    return {w:30,s:s};
+  }
+  var lcd=document.getElementById('lcd');
+  function draw(t){
+    var x=0,out='',i,g,parts=[];
+    for(i=0;i<t.length;i++){g=glyph(t[i]);parts.push([x,g]);x+=g.w+7}
+    var total=x-7,W=Math.max(total+16,296),ox=(W-total)/2;
+    parts.forEach(function(p){out+='<g transform="translate('+p[0]+' 0)">'+p[1].s+'</g>'});
+    lcd.setAttribute('viewBox','0 0 '+W+' 58');
+    lcd.innerHTML='<g transform="translate('+(ox+4)+' 3) skewX(-8)" stroke="#0d0d10" stroke-width="4.6" stroke-linecap="round" fill="none">'+out+'</g>';
+  }
+
+  // ---------- lógica ----------
+  var a='36',op='+',b='14',res=50,err=false;
+  var SYM={'+':'+','-':'-','*':'×','/':'÷'};
+  function fmt(n){if(!isFinite(n))return 'E';var s=String(parseFloat(n.toPrecision(10)));return s.length>10||s.indexOf('e')>-1?'E':s}
+  function calc(){
+    var x=parseFloat(a),y=parseFloat(b);
+    return op==='+'?x+y:op==='-'?x-y:op==='*'?x*y:y===0?NaN:x/y;
+  }
+  function show(){
+    var t;
+    if(err)t='E';
+    else if(res!==null)t=a+SYM[op]+b+'='+fmt(res);
+    else t=(a===''?'0':a)+(op?SYM[op]:'')+b;
+    draw(t);
+  }
+  function reset(){a='';op='';b='';res=null;err=false}
+  function press(k){
+    if(btn[k]){btn[k].classList.add('on');setTimeout(function(){btn[k].classList.remove('on')},110)}
+    if(err)reset();
+    if(/[0-9.]/.test(k)){
+      if(res!==null)reset();
+      var t=op?b:a;
+      if(t.replace('.','').length>=9)return;
+      if(k==='.'){if(t.indexOf('.')>-1)return;t=t===''?'0.':t+'.'}
+      else t=(t==='0')?k:t+k;
+      if(op)b=t;else a=t;
+    }else if(k==='='){
+      if(!op||b===''||res!==null)return;
+      res=calc();if(!isFinite(res)){err=true;res=null}
+    }else{
+      if(res!==null){a=fmt(res);b='';res=null}
+      if(a==='')a='0';
+      if(op&&b!==''){var r=calc();if(!isFinite(r)){err=true;show();return}a=fmt(r);b=''}
+      op=k;
+    }
+    show();
+  }
+  function back(){
+    if(err||res!==null){reset();show();return}
+    if(b!=='')b=b.slice(0,-1);else if(op)op='';else a=a.slice(0,-1);
+    show();
+  }
+  function clearAll(){reset();show()}
+  document.getElementById('clr').onclick=clearAll;
+  document.getElementById('ac').onclick=clearAll;
+  document.getElementById('del').onclick=back;
+  // fondo animado: huellas, corazones y estrellas flotando
+  var bg=document.getElementById('bg'),SH=['paw','heart','star','heart','paw','star'],CO=['#fff','#ffc8e4','#ffe27a','#d9c2ff','#9ff3f0','#ff9fd0'],n,h='';
+  for(n=0;n<28;n++){
+    var s=14+Math.random()*30;
+    h+='<svg class="f" width="'+s+'" height="'+s+'" style="left:'+(Math.random()*96)+'%;top:'+(10+Math.random()*85)+'%;fill:'+CO[n%CO.length]+';--d:'+(11+Math.random()*10)+'s;--w:-'+(Math.random()*14)+'s"><use href="#'+SH[n%SH.length]+'" width="100%" height="100%"/></svg>';
+  }
+  bg.innerHTML=h;
+  document.addEventListener('keydown',function(e){
+    var k=e.key;
+    if(/^[0-9]$/.test(k)||'+-*/'.indexOf(k)>-1)press(k);
+    else if(k==='.'||k===',')press('.');
+    else if(k==='Enter'||k==='='){e.preventDefault();press('=')}
+    else if(k==='Backspace')back();
+    else if(k==='Escape'||k==='c'||k==='C'){reset();show()}
+  });
+  show();
+})();
+</script>
+</body>
+</html>
